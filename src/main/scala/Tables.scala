@@ -1,4 +1,5 @@
-import slick.driver.H2Driver.api._
+//import slick.driver.H2Driver.api._
+import slick.driver.PostgresDriver.api._
 import slick.lifted.{ProvenShape, ForeignKeyQuery}
 
 // A Suppliers table with 6 columns: id, name, street, city, state, zip
@@ -12,7 +13,7 @@ class Suppliers(tag: Tag)
   def city: Rep[String] = column[String]("CITY")
   def state: Rep[String] = column[String]("STATE")
   def zip: Rep[String] = column[String]("ZIP")
-  
+
   // Every table needs a * projection with the same type as the table's type parameter
   def * : ProvenShape[(Int, String, String, String, String, String)] =
     (id, name, street, city, state, zip)
@@ -27,11 +28,11 @@ class Coffees(tag: Tag)
   def price: Rep[Double] = column[Double]("PRICE")
   def sales: Rep[Int] = column[Int]("SALES")
   def total: Rep[Int] = column[Int]("TOTAL")
-  
+
   def * : ProvenShape[(String, Int, Double, Int, Int)] =
     (name, supID, price, sales, total)
-  
+
   // A reified foreign key relation that can be navigated to create a join
-  def supplier: ForeignKeyQuery[Suppliers, (Int, String, String, String, String, String)] = 
+  def supplier: ForeignKeyQuery[Suppliers, (Int, String, String, String, String, String)] =
     foreignKey("SUP_FK", supID, TableQuery[Suppliers])(_.id)
 }

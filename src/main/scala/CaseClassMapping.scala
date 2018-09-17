@@ -1,16 +1,17 @@
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import slick.driver.H2Driver.api._
+//import slick.driver.H2Driver.api._
+import slick.driver.PostgresDriver.api._
 
 object CaseClassMapping extends App {
 
   // the base query for the Users table
   val users = TableQuery[Users]
 
-  val db = Database.forConfig("h2mem1")
+  val db_mem = Database.forConfig("h2mem1")
   try {
-    Await.result(db.run(DBIO.seq(
+    Await.result(db_mem.run(DBIO.seq(
       // create the schema
       users.schema.create,
 
@@ -21,7 +22,7 @@ object CaseClassMapping extends App {
       // print the users (select * from USERS)
       users.result.map(println)
     )), Duration.Inf)
-  } finally db.close
+  } finally db_mem.close
 }
 
 case class User(name: String, id: Option[Int] = None)

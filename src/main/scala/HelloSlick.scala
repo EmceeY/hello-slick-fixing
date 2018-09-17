@@ -2,11 +2,12 @@ import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import slick.backend.DatabasePublisher
-import slick.driver.H2Driver.api._
+//import slick.driver.H2Driver.api._
+import slick.driver.PostgresDriver.api._
 
 // The main application
 object HelloSlick extends App {
-  val db = Database.forConfig("h2mem1")
+  val db_mem = Database.forConfig("h2mem1")
   try {
 
     // The query interface for the Suppliers table
@@ -26,7 +27,7 @@ object HelloSlick extends App {
       suppliers += (150, "The High Ground", "100 Coffee Lane", "Meadows", "CA", "93966")
     )
 
-    val setupFuture: Future[Unit] = db.run(setupAction)
+    val setupFuture: Future[Unit] = db_mem.run(setupAction)
     val f = setupFuture.flatMap { _ =>
 
       // Insert some coffees (using JDBC's batch insert feature)
@@ -52,7 +53,7 @@ object HelloSlick extends App {
         insertAndPrintAction >> allSuppliersAction
 
       val combinedFuture: Future[Seq[(Int, String, String, String, String, String)]] =
-        db.run(combinedAction)
+        db_mem.run(combinedAction)
 
       combinedFuture.map { allSuppliers =>
         allSuppliers.foreach(println)
@@ -66,7 +67,7 @@ object HelloSlick extends App {
         coffees.map(_.name).result
 
       val coffeeNamesPublisher: DatabasePublisher[String] =
-        db.stream(coffeeNamesAction)
+        db_mem.stream(coffeeNamesAction)
 
       coffeeNamesPublisher.foreach(println)
 
@@ -82,7 +83,7 @@ object HelloSlick extends App {
       println("Generated SQL for filter query:\n" + filterQuery.result.statements)
 
       // Execute the query and print the Seq of results
-      db.run(filterQuery.result.map(println))
+      db_mem.run(filterQuery.result.map(println))
 
     }.flatMap { _ =>
 
@@ -97,7 +98,7 @@ object HelloSlick extends App {
       println("Generated SQL for Coffees update:\n" + updateQuery.updateStatement)
 
       // Perform the update
-      db.run(updateAction.map { numUpdatedRows =>
+      db_mem.run(updateAction.map { numUpdatedRows =>
         println(s"Updated $numUpdatedRows rows")
       })
 
@@ -115,7 +116,7 @@ object HelloSlick extends App {
       println("Generated SQL for Coffees delete:\n" + deleteAction.statements)
 
       // Perform the delete
-      db.run(deleteAction).map { numDeletedRows =>
+      db_mem.run(deleteAction).map { numDeletedRows =>
         println(s"Deleted $numDeletedRows rows")
       }
 
@@ -130,7 +131,7 @@ object HelloSlick extends App {
         sortByPriceQuery.result.statements)
 
       // Execute the query
-      db.run(sortByPriceQuery.result).map(println)
+      db_mem.run(sortByPriceQuery.result).map(println)
 
     }.flatMap { _ =>
 
@@ -143,7 +144,7 @@ object HelloSlick extends App {
         composedQuery.result.statements)
 
       // Execute the composed query
-      db.run(composedQuery.result).map(println)
+      db_mem.run(composedQuery.result).map(println)
 
     }.flatMap { _ =>
 
@@ -158,7 +159,7 @@ object HelloSlick extends App {
       println("Generated SQL for the join query:\n" + joinQuery.result.statements)
 
       // Print the rows which contain the coffee name and the supplier name
-      db.run(joinQuery.result).map(println)
+      db_mem.run(joinQuery.result).map(println)
 
     }.flatMap { _ =>
 
@@ -170,7 +171,7 @@ object HelloSlick extends App {
       println("Generated SQL for max price column:\n" + maxPriceColumn.result.statements)
 
       // Execute the computed value query
-      db.run(maxPriceColumn.result).map(println)
+      db_mem.run(maxPriceColumn.result).map(println)
 
     }.flatMap { _ =>
 
@@ -185,10 +186,10 @@ object HelloSlick extends App {
       println("Generated SQL for plain query:\n" + plainQuery.statements)
 
       // Execute the query
-      db.run(plainQuery).map(println)
+      db_mem.run(plainQuery).map(println)
 
     }
     Await.result(f, Duration.Inf)
 
-  } finally db.close
+} finally db_mem.close
 }

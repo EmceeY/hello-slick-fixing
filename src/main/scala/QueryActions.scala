@@ -1,5 +1,6 @@
-import slick.driver.H2Driver.api._
-
+//import slick.driver.H2Driver.api._
+import slick.driver.PostgresDriver.api._
+import com.EmceeY.secrets.Secrets
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,7 +16,7 @@ object QueryActions extends App {
   }
   val dict = TableQuery[Dict]
 
-  val db = Database.forConfig("h2mem1")
+  val db_mem = Database.forConfig("h2mem1")
   try {
 
     // Define a pre-compiled parameterized query for reading all key/value
@@ -27,7 +28,7 @@ object QueryActions extends App {
     // A second pre-compiled query which returns a Set[String]
     val upToSet = upTo.map(_.andThen(_.to[Set]))
 
-    Await.result(db.run(DBIO.seq(
+    Await.result(db_mem.run(DBIO.seq(
 
       // Create the dictionary table and insert some data
       dict.schema.create,
@@ -62,12 +63,12 @@ object QueryActions extends App {
 
     // The Publisher captures a Database plus a DBIO action.
     // The action does not run until you consume the stream.
-    val p = db.stream(upTo(3).result)
+    val p = db_mem.stream(upTo(3).result)
 
     println("Stream k/v pairs up to 3 via Reactive Streams")
     Await.result(p.foreach { v =>
       println("- " + v)
     }, Duration.Inf)
 
-  } finally db.close
+  } finally db_mem.close
 }
