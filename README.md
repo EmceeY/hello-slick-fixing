@@ -14,8 +14,13 @@ Commented out in memory database
 Connected postgresql database that was created locally to reflect the example schema
 
 None of the below SQL is necessary!
-Once a connection is established with the DB it will all be added for you.
-SQL code to generate tables:
+
+
+Once a connection is established with the DB,
+run HelloSlickDatabaseInit tables and data will be added for you.
+
+SQL code to generate tables (happens automagically):
+
     COFFEES Table:
         CREATE TABLE COFFEES
         (
@@ -26,6 +31,7 @@ SQL code to generate tables:
         TOTAL integer,
         CONSTRAINT pk PRIMARY KEY (COF_NAME)
         )
+
     SUPPLIERS Table:
         CREATE TABLE SUPPLIERS
         (
@@ -38,7 +44,8 @@ SQL code to generate tables:
         CONSTRAINT sk PRIMARY KEY (SUP_ID)
         )
 
-SQL code to insert data into tables:
+SQL code to insert data into tables (happens automatically):
+
     Supplier Data:
         INSERT INTO suppliers (sup_id, sup_name, street, city, state, zip) VALUES
         (101, 'Acme, Inc.', '99 Market Street', 'Groundsville', 'CA', '95199'),
