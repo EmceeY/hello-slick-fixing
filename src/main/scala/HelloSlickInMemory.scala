@@ -6,7 +6,7 @@ import slick.backend.DatabasePublisher
 import slick.driver.PostgresDriver.api._
 
 // The main application
-object HelloSlick extends App {
+object HelloSlickInMemory extends App {
   val db_mem = Database.forConfig("h2mem1")
   try {
 

@@ -12,8 +12,9 @@ Fixed the issues present with out of date versions
 Commented out in memory database
 
 Connected postgresql database that was created locally to reflect the example schema
-    needed both coffee and supplier tables
 
+None of the below SQL is necessary!
+Once a connection is established with the DB it will all be added for you.
 SQL code to generate tables:
     COFFEES Table:
         CREATE TABLE COFFEES
@@ -38,3 +39,16 @@ SQL code to generate tables:
         )
 
 SQL code to insert data into tables:
+    Supplier Data:
+        INSERT INTO suppliers (sup_id, sup_name, street, city, state, zip) VALUES
+        (101, 'Acme, Inc.', '99 Market Street', 'Groundsville', 'CA', '95199'),
+        ( 49, 'Superior Coffee', '1 Party Place', 'Mendocino', 'CA', '95460'),
+        (150, 'The High Ground', '100 Coffee Lane', 'Meadows', 'CA', '93966');
+
+    Coffee Data:
+        INSERT INTO coffees (cof_name, sup_id, price, sales, total) VALUES
+        ('Colombian',         101, 7.99, 0, 0),
+        ('French_Roast',       49, 8.99, 0, 0),
+        ('Espresso',          150, 9.99, 0, 0),
+        ('Colombian_Decaf',   101, 8.99, 0, 0),
+        ('French_Roast_Decaf', 49, 9.99, 0, 0);
